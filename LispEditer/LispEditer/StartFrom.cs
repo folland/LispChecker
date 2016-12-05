@@ -10,11 +10,17 @@ using System.Windows.Forms;
 
 namespace LispEditer
 {
-    public partial class Form1 : Form
+    public partial class StartFrom : Form
     {
-        public Form1()
+        public StartFrom()
         {
             InitializeComponent();
         }
+        
+        private void StartFrom_Load(object sender, EventArgs e)
+        {
+
+        }
+        
     }
 }
