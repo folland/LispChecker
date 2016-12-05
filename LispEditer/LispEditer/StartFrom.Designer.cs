@@ -28,30 +28,35 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.LispFilePassText = new System.Windows.Forms.TextBox();
             this.GetLispPassButton = new System.Windows.Forms.Button();
             this.DescriptionLabel = new System.Windows.Forms.Label();
-            this.OKButton = new System.Windows.Forms.Button();
-            this.CancelButton = new System.Windows.Forms.Button();
+            this.SetOKButton = new System.Windows.Forms.Button();
+            this.SetCancelButton = new System.Windows.Forms.Button();
             this.LispPassLabel = new System.Windows.Forms.Label();
+            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.SuspendLayout();
             // 
-            // textBox1
+            // LispFilePassText
             // 
-            this.textBox1.Font = new System.Drawing.Font("MS UI Gothic", 12F);
-            this.textBox1.Location = new System.Drawing.Point(30, 64);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(412, 23);
-            this.textBox1.TabIndex = 0;
+            this.LispFilePassText.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.LispFilePassText.Font = new System.Drawing.Font("MS UI Gothic", 12F);
+            this.LispFilePassText.Location = new System.Drawing.Point(30, 64);
+            this.LispFilePassText.Name = "LispFilePassText";
+            this.LispFilePassText.Size = new System.Drawing.Size(414, 23);
+            this.LispFilePassText.TabIndex = 0;
             // 
             // GetLispPassButton
             // 
-            this.GetLispPassButton.Location = new System.Drawing.Point(448, 64);
+            this.GetLispPassButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.GetLispPassButton.Location = new System.Drawing.Point(450, 64);
             this.GetLispPassButton.Name = "GetLispPassButton";
             this.GetLispPassButton.Size = new System.Drawing.Size(22, 23);
             this.GetLispPassButton.TabIndex = 1;
             this.GetLispPassButton.Text = "...";
             this.GetLispPassButton.UseVisualStyleBackColor = true;
+            this.GetLispPassButton.Click += new System.EventHandler(this.GetLispPassButton_Click);
             // 
             // DescriptionLabel
             // 
@@ -63,24 +68,27 @@
             this.DescriptionLabel.TabIndex = 2;
             this.DescriptionLabel.Text = "編集するLispファイルを入力してください";
             // 
-            // OKButton
+            // SetOKButton
             // 
-            this.OKButton.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.OKButton.Location = new System.Drawing.Point(298, 107);
-            this.OKButton.Name = "OKButton";
-            this.OKButton.Size = new System.Drawing.Size(75, 23);
-            this.OKButton.TabIndex = 3;
-            this.OKButton.Text = "OK";
-            this.OKButton.UseVisualStyleBackColor = true;
+            this.SetOKButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.SetOKButton.DialogResult = System.Windows.Forms.DialogResult.OK;
+            this.SetOKButton.Location = new System.Drawing.Point(300, 107);
+            this.SetOKButton.Name = "SetOKButton";
+            this.SetOKButton.Size = new System.Drawing.Size(75, 23);
+            this.SetOKButton.TabIndex = 3;
+            this.SetOKButton.Text = "OK";
+            this.SetOKButton.UseVisualStyleBackColor = true;
             // 
-            // CancelButton
+            // SetCancelButton
             // 
-            this.CancelButton.Location = new System.Drawing.Point(395, 107);
-            this.CancelButton.Name = "CancelButton";
-            this.CancelButton.Size = new System.Drawing.Size(75, 23);
-            this.CancelButton.TabIndex = 4;
-            this.CancelButton.Text = "キャンセル";
-            this.CancelButton.UseVisualStyleBackColor = true;
+            this.SetCancelButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.SetCancelButton.Location = new System.Drawing.Point(397, 107);
+            this.SetCancelButton.Name = "SetCancelButton";
+            this.SetCancelButton.Size = new System.Drawing.Size(75, 23);
+            this.SetCancelButton.TabIndex = 4;
+            this.SetCancelButton.Text = "キャンセル";
+            this.SetCancelButton.UseVisualStyleBackColor = true;
+            this.SetCancelButton.Click += new System.EventHandler(this.SetCancelButton_Click);
             // 
             // LispPassLabel
             // 
@@ -92,17 +100,23 @@
             this.LispPassLabel.TabIndex = 5;
             this.LispPassLabel.Text = "Lispファイルパス";
             // 
+            // openFileDialog1
+            // 
+            this.openFileDialog1.FileName = "openFileDialog1";
+            // 
             // StartFrom
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(502, 142);
+            this.ClientSize = new System.Drawing.Size(504, 142);
             this.Controls.Add(this.LispPassLabel);
-            this.Controls.Add(this.CancelButton);
-            this.Controls.Add(this.OKButton);
+            this.Controls.Add(this.SetCancelButton);
+            this.Controls.Add(this.SetOKButton);
             this.Controls.Add(this.DescriptionLabel);
             this.Controls.Add(this.GetLispPassButton);
-            this.Controls.Add(this.textBox1);
+            this.Controls.Add(this.LispFilePassText);
+            this.MaximumSize = new System.Drawing.Size(1920, 180);
+            this.MinimumSize = new System.Drawing.Size(520, 180);
             this.Name = "StartFrom";
             this.Text = "LispEditer";
             this.Load += new System.EventHandler(this.StartFrom_Load);
@@ -113,12 +127,13 @@
 
         #endregion
 
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox LispFilePassText;
         private System.Windows.Forms.Button GetLispPassButton;
         private System.Windows.Forms.Label DescriptionLabel;
-        private System.Windows.Forms.Button OKButton;
-        private System.Windows.Forms.Button CancelButton;
+        private System.Windows.Forms.Button SetOKButton;
+        private System.Windows.Forms.Button SetCancelButton;
         private System.Windows.Forms.Label LispPassLabel;
+        private System.Windows.Forms.OpenFileDialog openFileDialog1;
     }
 }
 
