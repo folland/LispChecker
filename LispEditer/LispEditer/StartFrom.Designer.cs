@@ -62,7 +62,6 @@
             this.DescriptionLabel.Size = new System.Drawing.Size(252, 16);
             this.DescriptionLabel.TabIndex = 2;
             this.DescriptionLabel.Text = "編集するLispファイルを入力してください";
-            this.DescriptionLabel.Click += new System.EventHandler(this.label1_Click);
             // 
             // OKButton
             // 
@@ -92,7 +91,6 @@
             this.LispPassLabel.Size = new System.Drawing.Size(105, 16);
             this.LispPassLabel.TabIndex = 5;
             this.LispPassLabel.Text = "Lispファイルパス";
-            this.LispPassLabel.Click += new System.EventHandler(this.label1_Click_1);
             // 
             // StartFrom
             // 
