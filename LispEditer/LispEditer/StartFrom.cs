@@ -29,18 +29,23 @@ namespace LispEditer
             lspFileDialog.Filter = "Lispファイル(*.lsp)|*.lsp|すべてのファイル(*.*)|*.*";
             if (lspFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
-                LispFilePassText.Text = lspFileDialog.FileName;
-                /* ファイル読み込み
-                System.IO.StreamReader sr = new System.IO.StreamReader(lspFileDialog.FileName);
-                MessageBox.Show(sr.ReadToEnd());
-                sr.Close();
-                */
+                LispPassText.Text = lspFileDialog.FileName;
+                OutputPassText.Text = lspFileDialog.FileName + "_Checked";
             }
         }
 
         private void SetCancelButton_Click(object sender, EventArgs e)
         {
             this.Close();
+        }
+
+        private void SetOKButton_Click(object sender, EventArgs e)
+        {
+            // ファイル読み込み
+            System.IO.StreamReader sr = new System.IO.StreamReader(LispPassText.Text);
+            String fileText = sr.ReadToEnd();
+            sr.Close();
+            String resultText = CodeCheck.All(fileText);
         }
     }
 }
