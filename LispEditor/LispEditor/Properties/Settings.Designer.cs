@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace LispEditer.Properties
+namespace LispEditor.Properties
 {
 
 

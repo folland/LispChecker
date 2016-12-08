@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace LispEditer
+namespace LispEditor
 {
     public partial class StartFrom : Form
     {
