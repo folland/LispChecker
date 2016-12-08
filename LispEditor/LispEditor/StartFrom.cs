@@ -30,7 +30,11 @@ namespace LispEditor
             if (lspFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
                 LispPassText.Text = lspFileDialog.FileName;
-                OutputPassText.Text = lspFileDialog.FileName + "_Checked";
+                //元のlspファイル名の末尾に "_Checked" を付ける
+                String lspFileName = System.IO.Path.GetFileNameWithoutExtension(lspFileDialog.FileName);
+                String outputFileName = lspFileName + "_Checked";
+                String outputFilePath = LispPassText.Text.Replace(lspFileName, outputFileName);
+                OutputPassText.Text = outputFilePath;
             }
         }
 
