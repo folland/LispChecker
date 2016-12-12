@@ -31,9 +31,9 @@ namespace LispEditor
             {
                 LispPassText.Text = lspFileDialog.FileName;
                 //元のlspファイル名の末尾に "_Checked" を付ける
-                String lspFileName = System.IO.Path.GetFileNameWithoutExtension(lspFileDialog.FileName);
-                String outputFileName = lspFileName + "_Checked";
-                String outputFilePath = LispPassText.Text.Replace(lspFileName, outputFileName);
+                string lspFileName = System.IO.Path.GetFileNameWithoutExtension(lspFileDialog.FileName);
+                string outputFileName = lspFileName + "_Checked";
+                string outputFilePath = LispPassText.Text.Replace(lspFileName, outputFileName);
                 OutputPassText.Text = outputFilePath;
             }
         }
@@ -47,9 +47,9 @@ namespace LispEditor
         {
             // ファイル読み込み
             System.IO.StreamReader sr = new System.IO.StreamReader(LispPassText.Text);
-            String fileText = sr.ReadToEnd();
+            string fileText = sr.ReadToEnd();
             sr.Close();
-            String resultText = CodeCheck.All(fileText);
+            string resultText = CodeCheck.All(fileText);
         }
     }
 }
