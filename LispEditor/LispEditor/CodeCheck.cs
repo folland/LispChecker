@@ -11,15 +11,15 @@ namespace LispEditor
     /// </summary>
     static class CodeCheck
     {
-        /// <summary>
-        /// 関数名を定数で定義
-        /// </summary>
+        /// <summary> 関数名 定義 </summary>
         private const string FunctionNameDefun = "defun";
+        /// <summary> 関数名 値入力 </summary>
         private const string FunctionNameSetq = "setq";
 
         /// <summary>
         /// 全ての要素をチェックする
         /// </summary>
+        /// <param name="fileText">チェックするテキスト文</param>
         public static string All(string fileText)
         {
             //文字コード判定
@@ -47,6 +47,7 @@ namespace LispEditor
             {
                 if (fileText[i].Equals('('))
                 {
+                    //関数名を取得
                     functionName = GetFunctionName(fileText.Substring(i + 1));
                     if (functionName.Equals(FunctionNameDefun))
                     {
