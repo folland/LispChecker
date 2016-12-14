@@ -1,4 +1,4 @@
-﻿namespace LispEditor
+﻿namespace LispChecker
 {
     partial class StartFrom
     {
@@ -155,7 +155,7 @@
             this.MaximumSize = new System.Drawing.Size(1920, 260);
             this.MinimumSize = new System.Drawing.Size(520, 180);
             this.Name = "StartFrom";
-            this.Text = "LispEditor";
+            this.Text = "LispChecker";
             this.Load += new System.EventHandler(this.StartFrom_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
