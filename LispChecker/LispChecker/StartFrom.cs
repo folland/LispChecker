@@ -48,8 +48,9 @@ namespace LispChecker
         {
             //文字コードセット
             System.Text.Encoding enc = System.Text.Encoding.GetEncoding("shift_jis");
+            //行ごとの配列として、テキストファイルの中身をすべて読み込む
+            string[] fileText = File.ReadAllLines(LispPassText.Text, enc);
             //テキストファイルの中身をすべて読み込む
-            string fileText = fileText = System.IO.File.ReadAllText(LispPassText.Text, enc);
             string resultText = CodeCheck.All(fileText);
             MessageBox.Show(resultText);
         }
