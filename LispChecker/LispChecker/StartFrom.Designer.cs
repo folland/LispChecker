@@ -44,16 +44,16 @@
             // 
             this.LispPassText.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.LispPassText.Font = new System.Drawing.Font("MS UI Gothic", 12F);
+            this.LispPassText.Font = new System.Drawing.Font("MS UI Gothic", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.LispPassText.Location = new System.Drawing.Point(31, 68);
             this.LispPassText.Name = "LispPassText";
-            this.LispPassText.Size = new System.Drawing.Size(414, 23);
+            this.LispPassText.Size = new System.Drawing.Size(694, 20);
             this.LispPassText.TabIndex = 0;
             // 
             // GetLispPassButton
             // 
             this.GetLispPassButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.GetLispPassButton.Location = new System.Drawing.Point(451, 68);
+            this.GetLispPassButton.Location = new System.Drawing.Point(730, 65);
             this.GetLispPassButton.Name = "GetLispPassButton";
             this.GetLispPassButton.Size = new System.Drawing.Size(22, 23);
             this.GetLispPassButton.TabIndex = 1;
@@ -75,7 +75,7 @@
             // 
             this.SetOKButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.SetOKButton.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.SetOKButton.Location = new System.Drawing.Point(300, 187);
+            this.SetOKButton.Location = new System.Drawing.Point(580, 187);
             this.SetOKButton.Name = "SetOKButton";
             this.SetOKButton.Size = new System.Drawing.Size(75, 23);
             this.SetOKButton.TabIndex = 3;
@@ -86,7 +86,7 @@
             // SetCancelButton
             // 
             this.SetCancelButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.SetCancelButton.Location = new System.Drawing.Point(397, 187);
+            this.SetCancelButton.Location = new System.Drawing.Point(677, 187);
             this.SetCancelButton.Name = "SetCancelButton";
             this.SetCancelButton.Size = new System.Drawing.Size(75, 23);
             this.SetCancelButton.TabIndex = 4;
@@ -114,14 +114,14 @@
             this.OutputPassLabel.Font = new System.Drawing.Font("MS UI Gothic", 12F);
             this.OutputPassLabel.Location = new System.Drawing.Point(28, 117);
             this.OutputPassLabel.Name = "OutputPassLabel";
-            this.OutputPassLabel.Size = new System.Drawing.Size(153, 16);
+            this.OutputPassLabel.Size = new System.Drawing.Size(185, 16);
             this.OutputPassLabel.TabIndex = 8;
-            this.OutputPassLabel.Text = "チェック結果ファイルパス";
+            this.OutputPassLabel.Text = "チェック結果出力ファイルパス";
             // 
             // OutputPassButton
             // 
             this.OutputPassButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.OutputPassButton.Location = new System.Drawing.Point(451, 136);
+            this.OutputPassButton.Location = new System.Drawing.Point(730, 133);
             this.OutputPassButton.Name = "OutputPassButton";
             this.OutputPassButton.Size = new System.Drawing.Size(22, 23);
             this.OutputPassButton.TabIndex = 7;
@@ -132,17 +132,17 @@
             // 
             this.OutputPassText.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.OutputPassText.Font = new System.Drawing.Font("MS UI Gothic", 12F);
+            this.OutputPassText.Font = new System.Drawing.Font("MS UI Gothic", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.OutputPassText.Location = new System.Drawing.Point(31, 136);
             this.OutputPassText.Name = "OutputPassText";
-            this.OutputPassText.Size = new System.Drawing.Size(414, 23);
+            this.OutputPassText.Size = new System.Drawing.Size(694, 20);
             this.OutputPassText.TabIndex = 6;
             // 
             // StartFrom
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(504, 222);
+            this.ClientSize = new System.Drawing.Size(784, 222);
             this.Controls.Add(this.OutputPassLabel);
             this.Controls.Add(this.OutputPassButton);
             this.Controls.Add(this.OutputPassText);

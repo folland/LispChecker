@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,8 +12,6 @@ namespace LispChecker
     /// </summary>
     static class CodeCheck
     {
-        /// <summary> 関数名 定義 </summary>
-        private const string FunctionNameDefun = "defun";
         /// <summary> 関数名 値入力 </summary>
         private const string FunctionNameSetq = "setq";
 
@@ -22,82 +21,120 @@ namespace LispChecker
         /// <param name="fileText">チェックするテキスト文</param>
         public static string All(string[] fileText)
         {
-            //文字コード判定
-            //ローカル変数取得
-            // "(defun" があったら、その次の" " + 定義関数名 + " " となっている定義関数名を取得
-            // その後の "(" + ... +  "/" 以後のローカル変数を取得　")"が来るまで続ける
-            string defunString = GetDefunString(fileText);
+            //ユーザー関数クラスのリストを取得
+            ArrayList userFunctionList = GetUserFunctionList(fileText);
+            string resultText = "";
+            if (0 <= userFunctionList.Count)
+            {
+                string functionNames = "関数名一覧 = [ ";
+                for (int i = 0; i < userFunctionList.Count; i++)
+                {
+                    UserFunction userFunction = (UserFunction)userFunctionList[i];
+                    functionNames += userFunction.FunctionName;
+                    if (i + 1 < userFunctionList.Count)
+                    {
+                        functionNames += " , ";
+                    }
+                }
+                functionNames += " ]\r\n";
+                resultText = "読み込み完了\r\n" + functionNames;
+            }
+            else if(userFunctionList.Count == 0)
+            {
+                resultText = "関数がありませんでした";
+            }
+            else
+            {
+                resultText = "読み込み失敗";
+            }
 
-
-            // "(defun" と対になる ")" が出るまで ローカル変数名を検索する
-            // 関数名と使用されていたローカル変数・使用されていなかったローカル変数
-            // ローカル変数にない文字を一覧に出す
-            string resultText = "読み込み完了 関数名 = [ " + defunString + " ]";
             return resultText;
         }
 
         /// <summary>
-        /// 定義関数の文字列のリストを作成する 
+        /// ユーザー関数のクラスのリストを作成する 
         /// </summary>
-        private static string GetDefunString(string[] fileText)
+        /// <param name="fileText">チェックするテキスト文</param>
+        /// <returns>ユーザー関数クラスのリスト</returns>
+        private static ArrayList GetUserFunctionList(string[] fileText)
         {
-            List<string> defunTextList = new List<string>();
+            ArrayList userFunctionList = new ArrayList();
             string rowText = "";
-            string functionName = "";
-            //一行毎に定義関数がないかチェックする
+            int rowNum = 0;
+            //一行毎にユーザー関数がないかチェックする
             for (int i = 0; i < fileText.Length; i++)
             {
                 rowText = fileText[i];
-                int defunIndex = rowText.IndexOf(FunctionNameDefun);
+                int defunIndex = rowText.IndexOf(UserFunction.FunctionNameDefun);
                 if (0 <= defunIndex)
                 {
-                    functionName = GetFunctionName(rowText , defunIndex);
+                    rowNum = GetLastRowNumUserFunction(fileText, i);
+                    //ユーザー関数部分の文字列のリストを取得
+                    string[] funcStringArray = fileText.Skip(i).Take(rowNum - i).ToArray();
+                    UserFunction userFunction = new UserFunction(funcStringArray);
+                    userFunctionList.Add(userFunction);
                 }
-                rowText += fileText[i];
             }
-
-            /* TODO:定義関数クラスを作成する
-               ・関数名
-               ・引数
-               ・ローカル変数
-               ・関数内容全文
-               ・(返り値)
-            */
-            return functionName;
+            return userFunctionList;
         }
 
         /// <summary>
-        /// 関数名を取得
-        /// 次の空白までの文字列が関数名となる
+        /// ユーザー関数の最後の行番号を取得
+        /// 左括弧が閉じきった行が最後の行となる
         /// </summary>
-        private static string GetFunctionName(string rowText , int defunIndex)
+        /// <param name="fileText">チェックするテキスト文</param>
+        /// <param name="startNum">開始行番号</param>
+        /// <returns>ユーザー関数の最後の行番号</returns>
+        private static int GetLastRowNumUserFunction(string[] fileText, int startNum)
         {
-            int startIndex = defunIndex + FunctionNameDefun.Length;
-            string functionName = "";
-            string hogeText = "";
-            for (int i = startIndex ; i < rowText.Length && functionName.Equals("") ; i++)
+            int endNum = startNum;
+            int leftPareCount = 0;
+            string rowText = "";
+
+            //左括弧の数が0になったときにループを終了する
+            for (int i = startNum; i < fileText.Length; i++)
             {
-                //'('までの文字列を取得する
-                if (rowText[i].Equals('('))
+                rowText = fileText[i];
+                //1行の左括弧の数をカウントする
+                leftPareCount += GetleftPareCountByRow(rowText);
+                if (i != startNum && leftPareCount == 0)
                 {
-                    functionName = hogeText.Trim(' ');
-                }
-                else
-                {
-                    hogeText += rowText[i];
+                    endNum = i;
+                    break;
                 }
             }
-            return functionName;
+            return endNum;
         }
-
         /// <summary>
-        /// 関数のローカル変数を取得する
+        /// 1行の左括弧の数をカウントする
         /// </summary>
-        private static string GetLocalVariable(String functionText)
+        /// <param name="rowText">チェックする行</param>
+        /// <returns>左括弧の数</returns>
+        private static int GetleftPareCountByRow(string rowText)
         {
-
-            return functionText;
+            int leftPareCount = 0;
+            bool doLoop = true;
+            for (int i = 0; i < rowText.Length && doLoop; i++)
+            {
+                char c = rowText[i];
+                switch (c)
+                {
+                    case ';':
+                        doLoop = false;
+                        break;
+                    case '(':
+                        leftPareCount++;
+                        break;
+                    case ')':
+                        leftPareCount--;
+                        break;
+                    default:
+                        break;
+                }
+            }
+            return leftPareCount;
         }
     }
 }
+
 
