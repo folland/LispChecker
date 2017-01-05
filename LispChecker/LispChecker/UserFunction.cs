@@ -14,17 +14,26 @@ namespace LispChecker
         private string[] funcStringArray;
         /// <summary> ユーザー関数名 </summary>
         private string functionName;
+        /// <summary> ユーザー関数の引数のリスト </summary>
+        private List<string> arguList;
 
         /// <summary> ユーザー関数名 </summary>
         public string FunctionName
         {
             get { return functionName; }
         }
+        /// <summary> ユーザー関数の引数のリスト </summary>
+        public List<string> ArguList
+        {
+            get { return arguList; }
+        }
 
+        /// <summary> コンストラクタ </summary>
         public UserFunction(string[] stringArray)
         {
             funcStringArray = stringArray;
             functionName = GetFunctionName();
+            arguList = GetArguList();
         }
 
         /* TODO:ユーザー関数クラスを作成する
@@ -44,6 +53,7 @@ namespace LispChecker
         /// 関数名を取得
         /// 次の空白までの文字列が関数名となる
         /// </summary>
+        /// <returns>関数名</returns>
         private string GetFunctionName()
         {
             string firstRowText = funcStringArray[0];
@@ -65,6 +75,71 @@ namespace LispChecker
                 }
             }
             return functionName;
+        }
+        /// <summary>
+        /// 引数のリストを取得
+        /// </summary>
+        /// <returns>引数のリスト</returns>
+        private List<string> GetArguList()
+        {
+            List<string> arguList = new List<string>();
+            //開始インデックスを取得
+            string firstRowText = funcStringArray[0];
+            int variableIndex = GetDefunFuncVariableIndex(firstRowText);
+            //引数のリストを取得
+            string hogeString = "";
+            bool isEnd = false;
+            int startIndex = variableIndex;
+            for (int i = 0; i < funcStringArray.Length && isEnd == false; i++)
+            {
+                string rowText = funcStringArray[i];
+                for (int j = startIndex; j < rowText.Length; j++)
+                {
+                    char c = rowText[j];
+                    if (c == '/' || c == ')' || c == ' ')
+                    {
+                        hogeString = hogeString.Trim(' ');
+                        if (hogeString != "")
+                        {
+                            arguList.Add(hogeString);
+                            hogeString = "";
+                        }
+                        if (c == '/' || c == ')')
+                        {
+                            isEnd = true;
+                            break;
+                        }
+                    }
+                    else
+                    {
+                        hogeString += c;
+                    }
+                }
+                startIndex = 0;
+            }
+            return arguList;
+        }
+        /// <summary>
+        /// 定義関数の定義変数(引数・ローカル変数)の開始インデックスを取得
+        /// </summary>
+        /// <returns>開始インデックス</returns>
+        private int GetDefunFuncVariableIndex(string firstRowText)
+        {
+            int variableIndex = firstRowText.Length;
+            //ユーザー関数名インデックスをずらす
+            int functionNameIndex = firstRowText.IndexOf(functionName);
+            int startIndex = functionNameIndex + functionName.Length;
+            for (int i = startIndex; i < firstRowText.Length; i++)
+            {
+                char c = firstRowText[i];
+                if (c == '(')
+                {
+                    //'('の次からが引数・ローカル変数の開始インデックスとなる
+                    variableIndex = i + 1;
+                    break;
+                }
+            }
+            return variableIndex;
         }
     }
 }

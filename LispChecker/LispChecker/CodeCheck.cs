@@ -15,6 +15,8 @@ namespace LispChecker
         /// <summary> 関数名 値入力 </summary>
         private const string FunctionNameSetq = "setq";
 
+        //TODO:一番最初に全てのコメント部分を削除する動作を挿入する
+
         /// <summary>
         /// 全ての要素をチェックする
         /// </summary>
@@ -26,18 +28,24 @@ namespace LispChecker
             string resultText = "";
             if (0 <= userFunctionList.Count)
             {
-                string functionNames = "関数名一覧 = [ ";
+                string functionString = "";
                 for (int i = 0; i < userFunctionList.Count; i++)
                 {
+                    functionString += "関数名 = [ ";
                     UserFunction userFunction = (UserFunction)userFunctionList[i];
-                    functionNames += userFunction.FunctionName;
-                    if (i + 1 < userFunctionList.Count)
+                    functionString += userFunction.FunctionName + " ]\r\n";
+                    functionString += "引数 = [ ";
+                    for (int j = 0; j < userFunction.ArguList.Count; j++)
                     {
-                        functionNames += " , ";
+                        functionString += userFunction.ArguList[j];
+                        if ((j + 1) != userFunction.ArguList.Count)
+                        {
+                            functionString += " , ";
+                        }
                     }
+                    functionString += " ]\r\n";
                 }
-                functionNames += " ]\r\n";
-                resultText = "読み込み完了\r\n" + functionNames;
+                resultText = "読み込み完了\r\n" + functionString;
             }
             else if(userFunctionList.Count == 0)
             {
