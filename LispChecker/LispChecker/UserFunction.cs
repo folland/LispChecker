@@ -15,7 +15,9 @@ namespace LispChecker
         /// <summary> ユーザー関数名 </summary>
         private string functionName;
         /// <summary> ユーザー関数の引数のリスト </summary>
-        private List<string> arguList;
+        private List<string> funcArguList;
+        /// <summary> ユーザー関数のローカル変数のリスト </summary>
+        private List<string> funcLocalVariableList;
 
         /// <summary> ユーザー関数名 </summary>
         public string FunctionName
@@ -25,7 +27,12 @@ namespace LispChecker
         /// <summary> ユーザー関数の引数のリスト </summary>
         public List<string> ArguList
         {
-            get { return arguList; }
+            get { return funcArguList; }
+        }
+        /// <summary> ユーザー関数のローカル変数のリスト </summary>
+        public List<string> LocalVariableList
+        {
+            get { return funcLocalVariableList; }
         }
 
         /// <summary> コンストラクタ </summary>
@@ -33,7 +40,8 @@ namespace LispChecker
         {
             funcStringArray = stringArray;
             functionName = GetFunctionName();
-            arguList = GetArguList();
+            funcArguList = GetArguList();
+            funcLocalVariableList = GetLocalVariableList();
         }
 
         /* TODO:ユーザー関数クラスを作成する
@@ -85,7 +93,7 @@ namespace LispChecker
             List<string> arguList = new List<string>();
             //開始インデックスを取得
             string firstRowText = funcStringArray[0];
-            int variableIndex = GetDefunFuncVariableIndex(firstRowText);
+            int variableIndex = GetDefunFuncArguIndex(firstRowText);
             //引数のリストを取得
             string hogeString = "";
             bool isEnd = false;
@@ -120,13 +128,56 @@ namespace LispChecker
             return arguList;
         }
         /// <summary>
-        /// 定義関数の定義変数(引数・ローカル変数)の開始インデックスを取得
+        /// ローカル変数のリストを取得
         /// </summary>
-        /// <returns>開始インデックス</returns>
-        private int GetDefunFuncVariableIndex(string firstRowText)
+        /// <returns>ローカル変数のリスト</returns>
+        private List<string> GetLocalVariableList()
         {
-            int variableIndex = firstRowText.Length;
-            //ユーザー関数名インデックスをずらす
+            List<string> localVariableList = new List<string>();
+            //開始インデックスを取得
+            string firstRowText = funcStringArray[0];
+            int variableIndex = firstRowText.IndexOf('/');
+            //引数のリストを取得
+            string hogeString = "";
+            bool isEnd = false;
+            int startIndex = variableIndex + 1;
+            for (int i = 0; i < funcStringArray.Length && isEnd == false; i++)
+            {
+                string rowText = funcStringArray[i];
+                for (int j = startIndex; j < rowText.Length; j++)
+                {
+                    char c = rowText[j];
+                    if (c == ')' || c == ' ')
+                    {
+                        hogeString = hogeString.Trim(' ');
+                        if (hogeString != "")
+                        {
+                            localVariableList.Add(hogeString);
+                            hogeString = "";
+                        }
+                        if ( c == ')')
+                        {
+                            isEnd = true;
+                            break;
+                        }
+                    }
+                    else
+                    {
+                        hogeString += c;
+                    }
+                }
+                startIndex = 0;
+            }
+            return localVariableList;
+        }
+        /// <summary>
+        /// 定義関数の引数の開始インデックスを取得
+        /// </summary>
+        /// <returns>定義関数の引数の開始インデックス</returns>
+        private int GetDefunFuncArguIndex(string firstRowText)
+        {
+            int arguIndex = firstRowText.Length;
+            //ユーザー関数名分インデックスをずらす
             int functionNameIndex = firstRowText.IndexOf(functionName);
             int startIndex = functionNameIndex + functionName.Length;
             for (int i = startIndex; i < firstRowText.Length; i++)
@@ -134,12 +185,12 @@ namespace LispChecker
                 char c = firstRowText[i];
                 if (c == '(')
                 {
-                    //'('の次からが引数・ローカル変数の開始インデックスとなる
-                    variableIndex = i + 1;
+                    //'('の次からが引数の開始インデックスとなる
+                    arguIndex = i + 1;
                     break;
                 }
             }
-            return variableIndex;
+            return arguIndex;
         }
     }
 }

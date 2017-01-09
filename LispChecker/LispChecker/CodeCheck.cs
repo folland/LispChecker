@@ -34,20 +34,12 @@ namespace LispChecker
                     functionString += "関数名 = [ ";
                     UserFunction userFunction = (UserFunction)userFunctionList[i];
                     functionString += userFunction.FunctionName + " ]\r\n";
-                    functionString += "引数 = [ ";
-                    for (int j = 0; j < userFunction.ArguList.Count; j++)
-                    {
-                        functionString += userFunction.ArguList[j];
-                        if ((j + 1) != userFunction.ArguList.Count)
-                        {
-                            functionString += " , ";
-                        }
-                    }
-                    functionString += " ]\r\n";
+                    functionString += GetStringByList("引数", userFunction.ArguList);
+                    functionString += GetStringByList("ローカル変数", userFunction.LocalVariableList);
                 }
                 resultText = "読み込み完了\r\n" + functionString;
             }
-            else if(userFunctionList.Count == 0)
+            else if (userFunctionList.Count == 0)
             {
                 resultText = "関数がありませんでした";
             }
@@ -57,6 +49,27 @@ namespace LispChecker
             }
 
             return resultText;
+        }
+
+        /// <summary>
+        /// リストから文を生成する
+        /// </summary>
+        /// <param name="title">文のタイトル</param>
+        /// <param name="strList">リスト</param>
+        /// <returns>リストから生成した文</returns>
+        private static string GetStringByList(string title, List<string> strList)
+        {
+            string answerString = title + " = [ ";
+            for (int j = 0; j < strList.Count; j++)
+            {
+                answerString += strList[j];
+                if ((j + 1) != strList.Count)
+                {
+                    answerString += " , ";
+                }
+            }
+            answerString += " ]\r\n";
+            return answerString;
         }
 
         /// <summary>
