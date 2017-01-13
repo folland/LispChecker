@@ -11,7 +11,8 @@ namespace LispChecker
         /// <summary> LISP定義関数名 </summary>
         public const string FunctionNameDefun = "defun";
         /// <summary> 関数全文の文字列リスト </summary>
-        private string[] funcStringArray;
+        private List<string> funcStringList;
+
         /// <summary> ユーザー関数名 </summary>
         private string functionName;
         /// <summary> ユーザー関数の引数のリスト </summary>
@@ -36,9 +37,10 @@ namespace LispChecker
         }
 
         /// <summary> コンストラクタ </summary>
-        public UserFunction(string[] stringArray)
+        /// <param name="stringList">関数全文の文字列リスト</param>
+        public UserFunction(List<string> stringList)
         {
-            funcStringArray = stringArray;
+            funcStringList = stringList;
             functionName = GetFunctionName();
             funcArguList = GetArguList();
             funcLocalVariableList = GetLocalVariableList();
@@ -64,7 +66,7 @@ namespace LispChecker
         /// <returns>関数名</returns>
         private string GetFunctionName()
         {
-            string firstRowText = funcStringArray[0];
+            string firstRowText = funcStringList[0];
             int defunIndex = firstRowText.IndexOf(FunctionNameDefun);
             //定義関数分インデックスをずらす
             int startIndex = defunIndex + FunctionNameDefun.Length;
@@ -84,6 +86,7 @@ namespace LispChecker
             }
             return functionName;
         }
+
         /// <summary>
         /// 引数のリストを取得
         /// </summary>
@@ -92,15 +95,15 @@ namespace LispChecker
         {
             List<string> arguList = new List<string>();
             //開始インデックスを取得
-            string firstRowText = funcStringArray[0];
+            string firstRowText = funcStringList[0];
             int variableIndex = GetDefunFuncArguIndex(firstRowText);
             //引数のリストを取得
             string hogeString = "";
             bool isEnd = false;
             int startIndex = variableIndex;
-            for (int i = 0; i < funcStringArray.Length && isEnd == false; i++)
+            for (int i = 0; i < funcStringList.Count && isEnd == false; i++)
             {
-                string rowText = funcStringArray[i];
+                string rowText = funcStringList[i];
                 for (int j = startIndex; j < rowText.Length; j++)
                 {
                     char c = rowText[j];
@@ -127,6 +130,7 @@ namespace LispChecker
             }
             return arguList;
         }
+
         /// <summary>
         /// ローカル変数のリストを取得
         /// </summary>
@@ -135,15 +139,15 @@ namespace LispChecker
         {
             List<string> localVariableList = new List<string>();
             //開始インデックスを取得
-            string firstRowText = funcStringArray[0];
+            string firstRowText = funcStringList[0];
             int variableIndex = firstRowText.IndexOf('/');
             //引数のリストを取得
             string hogeString = "";
             bool isEnd = false;
             int startIndex = variableIndex + 1;
-            for (int i = 0; i < funcStringArray.Length && isEnd == false; i++)
+            for (int i = 0; i < funcStringList.Count && isEnd == false; i++)
             {
-                string rowText = funcStringArray[i];
+                string rowText = funcStringList[i];
                 for (int j = startIndex; j < rowText.Length; j++)
                 {
                     char c = rowText[j];
@@ -155,7 +159,7 @@ namespace LispChecker
                             localVariableList.Add(hogeString);
                             hogeString = "";
                         }
-                        if ( c == ')')
+                        if (c == ')')
                         {
                             isEnd = true;
                             break;
@@ -170,9 +174,11 @@ namespace LispChecker
             }
             return localVariableList;
         }
+
         /// <summary>
         /// 定義関数の引数の開始インデックスを取得
         /// </summary>
+        /// <param name="firstRowText">定義関数の最初の行の文字列</param>
         /// <returns>定義関数の引数の開始インデックス</returns>
         private int GetDefunFuncArguIndex(string firstRowText)
         {

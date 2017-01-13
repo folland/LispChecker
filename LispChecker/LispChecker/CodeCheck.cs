@@ -15,16 +15,17 @@ namespace LispChecker
         /// <summary> 関数名 値入力 </summary>
         private const string FunctionNameSetq = "setq";
 
-        //TODO:一番最初に全てのコメント部分を削除する動作を挿入する
-
         /// <summary>
         /// 全ての要素をチェックする
         /// </summary>
-        /// <param name="fileText">チェックするテキスト文</param>
+        /// <param name="fileText">チェックする文字列配列</param>
         public static string All(string[] fileText)
         {
+            //コメント部分を全て削除
+            List<string> fileTextList = GetFileTextListOfNoComment(fileText);
+
             //ユーザー関数クラスのリストを取得
-            ArrayList userFunctionList = GetUserFunctionList(fileText);
+            ArrayList userFunctionList = GetUserFunctionList(fileTextList);
             string resultText = "";
             if (0 <= userFunctionList.Count)
             {
@@ -47,12 +48,11 @@ namespace LispChecker
             {
                 resultText = "読み込み失敗";
             }
-
             return resultText;
         }
 
         /// <summary>
-        /// リストから文を生成する
+        /// リストから出力用の文を生成する
         /// </summary>
         /// <param name="title">文のタイトル</param>
         /// <param name="strList">リスト</param>
@@ -60,10 +60,10 @@ namespace LispChecker
         private static string GetStringByList(string title, List<string> strList)
         {
             string answerString = title + " = [ ";
-            for (int j = 0; j < strList.Count; j++)
+            for (int i = 0; i < strList.Count; i++)
             {
-                answerString += strList[j];
-                if ((j + 1) != strList.Count)
+                answerString += strList[i];
+                if ((i + 1) != strList.Count)
                 {
                     answerString += " , ";
                 }
@@ -71,28 +71,89 @@ namespace LispChecker
             answerString += " ]\r\n";
             return answerString;
         }
+        
+        /// <summary>
+        /// lspソースからコメントを全て削除し、文字列リストで返す 
+        /// </summary>
+        /// <param name="fileText">ソース全文</param>
+        /// <returns>lspソースの文字列リスト</returns>
+        private static List<string> GetFileTextListOfNoComment(string[] fileText)
+        {
+            List<string> fileTextList = new List<string>();
+            string rowText = "";
+            string hogeText = "";
+            bool inBlockComment = false;
+            for (int i = 0; i < fileText.Length; i++)
+            {
+                rowText = fileText[i];
+                if (inBlockComment)
+                {
+                    int endBlockComment = rowText.IndexOf("|;");
+                    if (endBlockComment != -1)
+                    {
+                        inBlockComment = false; //ブロックコメント終了
+                        hogeText = GetStringofNoComment(rowText, endBlockComment + 2);
+                        fileTextList.Add(hogeText);
+                    }
+                }
+                else
+                {
+                    hogeText = GetStringofNoComment(rowText, 0);
+                    fileTextList.Add(hogeText);
+                }
+                if (rowText.IndexOf(";|") != -1)
+                {
+                    inBlockComment = true; //ブロックコメント開始
+                }
+            }
+            return fileTextList;
+        }
+
+        /// <summary>
+        /// lspソース1行からコメントを削除した文を作成し返す
+        /// </summary>
+        /// <param name="fileString">チェックするテキスト文</param>
+        /// <param name="startIndex">開始インデックス</param>
+        /// <returns>コメントを削除したソース一行</returns>
+        private static string GetStringofNoComment(string fileString, int startIndex)
+        {
+            string noCommentString = "";
+            for (int i = startIndex; i < fileString.Length; i++)
+            {
+                char c = fileString[i];
+                if (c == ';')
+                {
+                    break;
+                }
+                else
+                {
+                    noCommentString += c;
+                }
+            }
+            return noCommentString;
+        }
 
         /// <summary>
         /// ユーザー関数のクラスのリストを作成する 
         /// </summary>
-        /// <param name="fileText">チェックするテキスト文</param>
+        /// <param name="fileTextList">チェックするテキスト文</param>
         /// <returns>ユーザー関数クラスのリスト</returns>
-        private static ArrayList GetUserFunctionList(string[] fileText)
+        private static ArrayList GetUserFunctionList(List<string> fileTextList)
         {
             ArrayList userFunctionList = new ArrayList();
             string rowText = "";
             int rowNum = 0;
             //一行毎にユーザー関数がないかチェックする
-            for (int i = 0; i < fileText.Length; i++)
+            for (int i = 0; i < fileTextList.Count; i++)
             {
-                rowText = fileText[i];
+                rowText = fileTextList[i];
                 int defunIndex = rowText.IndexOf(UserFunction.FunctionNameDefun);
                 if (0 <= defunIndex)
                 {
-                    rowNum = GetLastRowNumUserFunction(fileText, i);
+                    rowNum = GetLastRowNumUserFunction(fileTextList, i);
                     //ユーザー関数部分の文字列のリストを取得
-                    string[] funcStringArray = fileText.Skip(i).Take(rowNum - i).ToArray();
-                    UserFunction userFunction = new UserFunction(funcStringArray);
+                    List<string> funcStringList = fileTextList.GetRange(i, rowNum - i);
+                    UserFunction userFunction = new UserFunction(funcStringList);
                     userFunctionList.Add(userFunction);
                 }
             }
@@ -103,19 +164,19 @@ namespace LispChecker
         /// ユーザー関数の最後の行番号を取得
         /// 左括弧が閉じきった行が最後の行となる
         /// </summary>
-        /// <param name="fileText">チェックするテキスト文</param>
+        /// <param name="fileTextList">チェックするテキスト文</param>
         /// <param name="startNum">開始行番号</param>
         /// <returns>ユーザー関数の最後の行番号</returns>
-        private static int GetLastRowNumUserFunction(string[] fileText, int startNum)
+        private static int GetLastRowNumUserFunction(List<string> fileTextList, int startNum)
         {
             int endNum = startNum;
             int leftPareCount = 0;
             string rowText = "";
 
             //左括弧の数が0になったときにループを終了する
-            for (int i = startNum; i < fileText.Length; i++)
+            for (int i = startNum; i < fileTextList.Count; i++)
             {
-                rowText = fileText[i];
+                rowText = fileTextList[i];
                 //1行の左括弧の数をカウントする
                 leftPareCount += GetleftPareCountByRow(rowText);
                 if (i != startNum && leftPareCount == 0)
@@ -126,6 +187,7 @@ namespace LispChecker
             }
             return endNum;
         }
+
         /// <summary>
         /// 1行の左括弧の数をカウントする
         /// </summary>
