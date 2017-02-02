@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace LispChecker
 {
@@ -10,6 +6,8 @@ namespace LispChecker
     {
         /// <summary> LISP定義関数名 </summary>
         public const string FunctionNameDefun = "defun";
+        public const string FunctionNameSetq = "setq";
+
         /// <summary> 関数全文の文字列リスト </summary>
         private List<string> funcStringList;
 
@@ -60,8 +58,8 @@ namespace LispChecker
         */
 
         /// <summary>
-        /// 関数名を取得
-        /// 次の空白までの文字列が関数名となる
+        /// ユーザー関数の関数名を取得
+        /// 次の空白までの文字列がユーザー関数の関数名となる
         /// </summary>
         /// <returns>関数名</returns>
         private string GetFunctionName()
@@ -176,10 +174,10 @@ namespace LispChecker
         }
 
         /// <summary>
-        /// 定義関数の引数の開始インデックスを取得
+        /// ユーザー関数の引数の開始インデックスを取得
         /// </summary>
-        /// <param name="firstRowText">定義関数の最初の行の文字列</param>
-        /// <returns>定義関数の引数の開始インデックス</returns>
+        /// <param name="firstRowText">ユーザー関数の最初の行の文字列</param>
+        /// <returns>ユーザー関数の引数の開始インデックス</returns>
         private int GetDefunFuncArguIndex(string firstRowText)
         {
             int arguIndex = firstRowText.Length;
@@ -198,5 +196,75 @@ namespace LispChecker
             }
             return arguIndex;
         }
+
+        /// <summary>
+        /// ユーザー関数内の変数を取得し、種類別のリストに追加
+        /// </summary>
+        private void GetAllVariableListByType()
+        {
+            //関数の引数・変数の次の行の行番号を取得する
+            int contentsRowNum = GetRowNumberOfContentsRowNum();
+            for (int i = contentsRowNum; i < funcStringList.Count; i++)
+            {
+                string rowText = funcStringList[i];
+                string rowTextHoge = rowText;
+                bool isLoop = true;
+                while (isLoop)
+                {
+                    int indexOfSetq = rowTextHoge.IndexOf(FunctionNameSetq);
+                    if (indexOfSetq < 0)
+                    {
+                        isLoop = false;
+                    }
+                    else
+                    {
+                        //setqの終わりの右括弧までを検索する
+                        //setqの内容が書かれた文字列のリストを取得する
+                        //setqの文字列のリストから変数を種類別のリストに追加する
+                        GetVariableListByType();
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// 関数の実行内容行の行番号を取得する
+        /// </summary>
+        /// <returns>実行内容行の行番号</returns>
+        private int GetRowNumberOfContentsRowNum()
+        {
+            int contentsRowNum = 0;
+            bool isEnd = false;
+            for (int i = 0; i < funcStringList.Count && isEnd == false; i++)
+            {
+                string rowText = funcStringList[i];
+                for (int j = 0; j < rowText.Length; j++)
+                {
+                    char c = rowText[j];
+                    if (c == ')')
+                    {
+                        //右括弧がある行を引数・変数の宣言を終えた行とする
+                        isEnd = true;
+                    }
+                }
+                if (isEnd)
+                {
+                    contentsRowNum = i + 1;
+                }
+            }
+            return contentsRowNum;
+        }
+
+        /// <summary>
+        /// 変数を種類別のリストに入れる
+        /// </summary>
+        private void GetVariableListByType()
+        {
+
+        }
+
+
+
+
     }
 }
