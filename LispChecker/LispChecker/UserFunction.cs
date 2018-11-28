@@ -12,36 +12,20 @@ namespace LispChecker
         private List<string> funcStringList;
 
         /// <summary> ユーザー関数名 </summary>
-        private string functionName;
+        public string FunctionName { get; }
         /// <summary> ユーザー関数の引数のリスト </summary>
-        private List<string> funcArguList;
+        public List<string> ArguList { get; }
         /// <summary> ユーザー関数のローカル変数のリスト </summary>
-        private List<string> funcLocalVariableList;
-
-        /// <summary> ユーザー関数名 </summary>
-        public string FunctionName
-        {
-            get { return functionName; }
-        }
-        /// <summary> ユーザー関数の引数のリスト </summary>
-        public List<string> ArguList
-        {
-            get { return funcArguList; }
-        }
-        /// <summary> ユーザー関数のローカル変数のリスト </summary>
-        public List<string> LocalVariableList
-        {
-            get { return funcLocalVariableList; }
-        }
+        public List<string> LocalVariableList { get; }
 
         /// <summary> コンストラクタ </summary>
         /// <param name="stringList">関数全文の文字列リスト</param>
         public UserFunction(List<string> stringList)
         {
             funcStringList = stringList;
-            functionName = GetFunctionName();
-            funcArguList = GetArguList();
-            funcLocalVariableList = GetLocalVariableList();
+            FunctionName = GetFunctionName();
+            ArguList = GetArguList();
+            LocalVariableList = GetLocalVariableList();
         }
 
         /* TODO:ユーザー関数クラスを作成する
