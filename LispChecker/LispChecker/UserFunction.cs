@@ -166,8 +166,8 @@ namespace LispChecker
         {
             int arguIndex = firstRowText.Length;
             //ユーザー関数名分インデックスをずらす
-            int functionNameIndex = firstRowText.IndexOf(functionName);
-            int startIndex = functionNameIndex + functionName.Length;
+            int functionNameIndex = firstRowText.IndexOf(FunctionName);
+            int startIndex = functionNameIndex + FunctionName.Length;
             for (int i = startIndex; i < firstRowText.Length; i++)
             {
                 char c = firstRowText[i];
